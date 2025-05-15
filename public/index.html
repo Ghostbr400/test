@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeForge Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        codeblue: '#0D9BFF',
+                        codepurple: '#6C63FF',
+                        codeteal: '#00D5C8',
+                        darkbg: '#081020',
+                        darkerbg: '#050A14',
+                        panelbg: '#0A1628',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 8px 24px -4px rgba(0, 0, 0, 0.3)',
+                        'card-hover': '0 12px 28px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(13, 155, 255, 0.4)',
+                    },
+                }
+            },
+            darkMode: 'class',
+        }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+    
+    <link rel="stylesheet" href="/pages/css/dashboard.css">
+</head>
+
+<body class="text-white touch-action">
+    <div class="dashboard-grid">
+        <div class="grid-background"></div>
+        
+        <div class="glow-element" style="top: 15%; left: 30%;"></div>
+        <div class="glow-element" style="top: 60%; left: 70%;"></div>
+        
+        <div class="mobile-header lg:hidden py-3 px-4 flex items-center justify-between">
+            <div class="text-xl font-bold flex items-center">
+                <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-codeblue to-codepurple mr-2">
+                    <span class="text-white">&lt;/&gt;</span>
+                </div>
+                <span class="text-codeblue">Code</span><span class="text-white">Forge</span>
+            </div>
+            <button id="open-sidebar" class="lg:hidden w-10 h-10 rounded-lg bg-codeblue bg-opacity-20 flex items-center justify-center text-codeblue">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="p-5 border-b border-gray-800 flex items-center justify-between">
+                <div class="text-xl font-bold flex items-center">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-codeblue to-codepurple mr-2">
+                        <span class="text-white">&lt;/&gt;</span>
+                    </div>
+                    <span class="text-codeblue">Code</span><span class="text-white">Forge</span>
+                </div>
+                <button class="lg:hidden text-gray-400 hover:text-white transition" id="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5 border-b border-gray-800">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-codeblue to-codepurple flex items-center justify-center text-white font-semibold shadow-lg">
+                        DR
+                    </div>
+                    <div class="ml-3">
+                        <div class="font-medium">Dev Roblox</div>
+                        <div class="text-xs text-gray-400 flex items-center">
+                            <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span>
+                            Pro Developer
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="p-3">
+                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 mt-4 px-3">Visão Geral</div>
+                <a href="#" class="nav-item active flex items-center text-white p-3 rounded-lg mb-1">
+                    <div class="w-9 h-9 rounded-lg bg-codeblue bg-opacity-20 flex items-center justify-center text-codeblue">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span class="ml-3">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item flex items-center text-gray-400 hover:text-white p-3 rounded-lg mb-1">
+                    <div class="w-9 h-9 rounded-lg bg-gray-700 bg-opacity-20 flex items-center justify-center text-gray-400">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <span class="ml-3">Produtos</span>
+                </a>
+                <a href="#" class="nav-item flex items-center text-gray-400 hover:text-white p-3 rounded-lg mb-1">
+                    <div class="w-9 h-9 rounded-lg bg-gray-700 bg-opacity-20 flex items-center justify-center text-gray-400">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="ml-3">Feedbacks</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content relative">
+            <div class="p-4 sm:p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 stats-grid">
+                    <div class="card p-4 sm:p-5 fade-in" style="animation-delay: 0.2s">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400 text-sm">Robux</p>
+                                <h3 class="text-xl sm:text-2xl font-semibold mt-1">1.000</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-green-500 bg-opacity-20 flex items-center justify-center text-green-400">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="text-green-400 text-xs font-medium"><i class="fas fa-arrow-up mr-1"></i> 12% desde o mês passado</span>
+                        </div>
+                    </div>
+            
+                    <div class="card p-4 sm:p-5 fade-in" style="animation-delay: 0.4s">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400 text-sm">Vendas</p>
+                                <h3 class="text-xl sm:text-2xl font-semibold mt-1">100</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-blue-500 bg-opacity-20 flex items-center justify-center text-blue-400">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="text-blue-400 text-xs font-medium"><i class="fas fa-arrow-up mr-1"></i> 10% desde o mês passado</span>
+                        </div>
+                    </div>
+            
+                    <div class="card p-4 sm:p-5 fade-in" style="animation-delay: 0.6s">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400 text-sm">Visualizações</p>
+                                <h3 class="text-xl sm:text-2xl font-semibold mt-1">1.250</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center text-purple-400">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="text-purple-400 text-xs font-medium"><i class="fas fa-arrow-up mr-1"></i> 15% desde o mês passado</span>
+                        </div>
+                    </div>
+            
+                    <div class="card p-4 sm:p-5 fade-in" style="animation-delay: 0.8s">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400 text-sm">Avaliação</p>
+                                <h3 class="text-xl sm:text-2xl font-semibold mt-1">4.8</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-yellow-500 bg-opacity-20 flex items-center justify-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="text-yellow-400 text-xs font-medium"><i class="fas fa-arrow-up mr-1"></i> 5% desde o mês passado</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-4 sm:px-6 mb-8 product-cards">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg sm:text-xl font-bold">Seus Produtos</h2>
+                        <a href="#" class="text-codeblue text-sm hover:underline">Ver todos</a>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="product-scroll-container pb-6 scrollbar-hide">
+                            <div class="card p-3 sm:p-4 product-card transform transition hover:-translate-y-1 hover:shadow-lg">
+                                <div class="relative h-36 sm:h-44 mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-blue-900 to-blue-700">
+                                    <video class="w-full h-full object-cover" muted loop autoplay playsinline>
+                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-game-show-suspense-waiting-668-large.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-1 rounded text-xs">
+                                        R$ 150 Robux
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold">Sistema de Inventário</h3>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm mt-2">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Vendas</p>
+                                        <p class="font-medium">85</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Avaliação</p>
+                                        <p class="font-medium text-yellow-400">4.7 ★</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Visualizações</p>
+                                        <p class="font-medium">1.2k</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-3 sm:p-4 product-card transform transition hover:-translate-y-1 hover:shadow-lg">
+                                <div class="relative h-36 sm:h-44 mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-blue-800 to-blue-600">
+                                    <video class="w-full h-full object-cover" muted loop autoplay playsinline>
+                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-1 rounded text-xs">
+                                        R$ 200 Robux
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold">Sistema de Níveis</h3>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm mt-2">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Vendas</p>
+                                        <p class="font-medium">62</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Avaliação</p>
+                                        <p class="font-medium text-yellow-400">4.9 ★</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Visualizações</p>
+                                        <p class="font-medium">980</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-3 sm:p-4 product-card transform transition hover:-translate-y-1 hover:shadow-lg">
+                                <div class="relative h-36 sm:h-44 mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-purple-900 to-purple-700">
+                                    <video class="w-full h-full object-cover" muted loop autoplay playsinline>
+                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-computer-screen-with-numbers-8532-large.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-1 rounded text-xs">
+                                        R$ 250 Robux
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold">UI Moderna</h3>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm mt-2">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Vendas</p>
+                                        <p class="font-medium">48</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Avaliação</p>
+                                        <p class="font-medium text-yellow-400">4.5 ★</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Visualizações</p>
+                                        <p class="font-medium">1.5k</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-3 sm:p-4 product-card transform transition hover:-translate-y-1 hover:shadow-lg">
+                                <div class="relative h-36 sm:h-44 mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-pink-900 to-pink-700">
+                                    <video class="w-full h-full object-cover" muted loop autoplay playsinline>
+                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-man-playing-with-game-controller-2768-large.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-1 rounded text-xs">
+                                        R$ 300 Robux
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold">Sistema de Combate</h3>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm mt-2">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Vendas</p>
+                                        <p class="font-medium">76</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Avaliação</p>
+                                        <p class="font-medium text-yellow-400">4.8 ★</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Visualizações</p>
+                                        <p class="font-medium">2.1k</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-3 sm:p-4 product-card transform transition hover:-translate-y-1 hover:shadow-lg">
+                                <div class="relative h-36 sm:h-44 mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-green-900 to-green-700">
+                                    <video class="w-full h-full object-cover" muted loop autoplay playsinline>
+                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-vehicle-wheel-8534-large.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 px-2 py-1 rounded text-xs">
+                                        R$ 350 Robux
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold">Sistema de Veículos</h3>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-sm mt-2">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Vendas</p>
+                                        <p class="font-medium">53</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Avaliação</p>
+                                        <p class="font-medium text-yellow-400">4.6 ★</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Visualizações</p>
+                                        <p class="font-medium">1.8k</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mt-4 space-x-2">
+                            <div class="w-2 h-2 rounded-full bg-codeblue"></div>
+                            <div class="w-2 h-2 rounded-full bg-gray-600"></div>
+                            <div class="w-2 h-2 rounded-full bg-gray-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="border-t border-gray-800 mt-6 py-4 sm:py-6 px-4 sm:px-6 text-center text-gray-500 text-sm">
+                <p>© 2025 CodeForge. Todos os direitos reservados.</p>
+            </footer>
+        </main>
+    </div>
+    <script src="/pages/js/dashboard.js"></script>
+</body>
+</html>
